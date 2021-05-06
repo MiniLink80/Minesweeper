@@ -5,7 +5,6 @@ import random
 import time
 
 
-
 #board info
 w = 30
 h = 20
