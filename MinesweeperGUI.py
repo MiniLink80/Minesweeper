@@ -5,6 +5,7 @@ import random
 import time
 
 
+
 #board info
 w = 30
 h = 20
@@ -110,6 +111,7 @@ class Buttons():
             self.canv.create_image(pos, pos, anchor="se", image=images[self.val])
             self.exposed = True
     
+    
     def RecurExpose(self):
         if self.bomb:
             return
@@ -124,39 +126,21 @@ class Buttons():
                     if not buttonList[i][j].exposed:
                         buttonList[i][j].RecurExpose()
 
-    #open if you want cancer
+    #Gives each tile its value by counting the number of bombs around it
     def SetValue(self):
         if self.bomb:
             return
-        i = self.i
-        j = self.j
         val = 0
-        if i > 0:
-            if buttonList[i-1][j].bomb:#N
-                val += 1
-            if j > 0:
-                if buttonList[i-1][j-1].bomb:#NW
-                    val += 1
-            if j < w-1:
-                if buttonList[i-1][j+1].bomb:#NE
-                    val += 1
-        if i < h-1:
-            if buttonList[i+1][j].bomb:#S
-                val += 1
-            if j > 0:
-                if buttonList[i+1][j-1].bomb:#SW
-                    val += 1
-            if j < w-1:
-                if buttonList[i+1][j+1].bomb:#SE
-                    val += 1
-        if j > 0:
-            if buttonList[i][j-1].bomb:#W
-                val += 1
-        if j < w-1:
-            if buttonList[i][j+1].bomb:
-                val += 1
+        for dy in range(-1, 2):
+            for dx in range(-1, 2):
+                i = self.i + dy
+                j = self.j + dx
+                if i in range(h) and j in range(w):
+                    if buttonList[i][j].bomb:
+                        val += 1
         self.val = val
-        
+    
+    #It's in the name
     @classmethod
     def ShowAllBombs(cls):
         i = 1
@@ -168,7 +152,7 @@ class Buttons():
             
 
 
-#creating canvases and assigning them to buttonList
+#Creating canvases and assigning them to buttonList
 for i in range(h):
     for j in range(w):
         tempButton = Buttons(tk.Canvas(master=butPanel, width=cellSize, height=cellSize, bg=bg2), i, j)
@@ -178,7 +162,7 @@ for i in range(h):
 
         buttonList[i][j] = tempButton
 
-#generating bombs
+#Generating bombs
 index = 0
 while index < bombCount:
     i = random.randint(0, h-1)
@@ -189,7 +173,7 @@ while index < bombCount:
     buttonList[i][j].bomb = True
     index += 1
     
-#assigning the value of each cell
+#Assigning the value of each cell
 for i in range(h):
     for j in range(w):
         buttonList[i][j].SetValue()
