@@ -1,8 +1,6 @@
 import tkinter as tk
-from functools import partial
 from PIL import ImageTk, Image
 import random
-import time
 
 
 #board info
